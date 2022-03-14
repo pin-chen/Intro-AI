@@ -33,5 +33,5 @@ def detect(dataPath, clf):
                 cv2.rectangle(image, ( face[0], face[1] ), ( face[0] + face[2], face[1] + face[3] ), (0, 255, 0), thickness=2 )
             else:
                 cv2.rectangle(image, ( face[0], face[1] ), ( face[0] + face[2], face[1] + face[3] ), (0, 0, 255), thickness=2 )
-        cv2.imwrite("part6_"+image_name, image)
+        cv2.imwrite("result/part4/10/part4_"+image_name, image)
     # End your code (Part 4)

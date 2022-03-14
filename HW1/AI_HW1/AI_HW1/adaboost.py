@@ -57,8 +57,8 @@ class Adaboost:
 #
             weights = weights / np.sum(weights)
             # Compute error and select best classifiers
-            #clf, error = self.selectBest(featureVals, iis, labels, features, weights)
-            clf, error = self.own_selectBest(featureVals, iis, labels, features, weights)
+            clf, error = self.selectBest(featureVals, iis, labels, features, weights)
+            #clf, error = self.own_selectBest(featureVals, iis, labels, features, weights)
             #update weights
             accuracy = []
             for x, y in zip(iis, labels):
@@ -175,12 +175,17 @@ class Adaboost:
         features_num = featureVals.shape[0]
         dataset_num = featureVals.shape[1]
         epsilon = np.zeros(features_num)
-        print(featureVals)
-        for j in range(features_num):
-            for i in range(dataset_num):
-                h = 1 if abs(featureVals[j][i]) > j / features_num else 0
-                epsilon[j] += abs( h - labels[i] ) * np.power(weights[i], 1 + j / features_num)
         
+        for j in range(features_num):
+            mean = 0
+            fv = sorted(featureVals[j])
+            for k in range( dataset_num ):
+                mean += fv[k]
+            mean /= dataset_num
+            for i in range(dataset_num):
+                h = 1 if featureVals[j][i] < mean else 0
+                epsilon[j] += weights[i] * abs( h - labels[i] ) * math.exp(1 + j / features_num)
+                
         bestError = epsilon[0]
         bestClf = WeakClassifier(features[0])
         
