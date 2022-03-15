@@ -1,0 +1,26 @@
+Loading images
+The number of training samples loaded: 200
+The number of test samples loaded: 200
+Show the first and last images of training dataset
+Computing integral images
+Building features
+Applying features to dataset
+Selecting best features
+Selected 5171 potential features
+Initialize weights
+Run No. of Iteration: 1
+Chose classifier: Weak Clf (threshold=0, polarity=1, Haar feature (positive regions=[RectangleRegion(14, 2, 2, 3)], negative regions=[RectangleRegion(14, 5, 2, 3)]) with accuracy: 139.000000 and alpha: 0.623243
+
+Evaluate your classifier with training dataset
+False Positive Rate: 61/100 (0.610000)
+False Negative Rate: 0/100 (0.000000)
+Accuracy: 139/200 (0.695000)
+
+Evaluate your classifier with test dataset
+False Positive Rate: 66/100 (0.660000)
+False Negative Rate: 3/100 (0.030000)
+Accuracy: 131/200 (0.655000)
+
+Detect faces at the assigned location using your classifier
+
+Detect faces on your own images
