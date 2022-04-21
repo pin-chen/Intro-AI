@@ -135,13 +135,25 @@ class MinimaxAgent(MultiAgentSearchAgent):
         """
         # Begin your code (Part 1)
         #raise NotImplementedError("To be implemented")
+        """
+            1. Call maxValue function
+            2. Action compute by maxValue
+        """
         _, nextAction = self.maxValue(gameState, 0, 0);
         return nextAction
     def terminalState(self, gameState, agentIndex, curDepth):
+        """
+            1. return this game is finish or not and the depth is reached or not
+        """
         if gameState.isWin() or gameState.isLose() or curDepth >= self.depth:
             return True
         return False
     def nextValue(self, gameState, agentIndex, curDepth, nextAgent, legalAction):
+        """
+            1. For given state, agent, action call next function (max or min)
+                - pacman is max player
+                - ghosts are min player
+        """
         nextState = gameState.getNextState(agentIndex, legalAction)
         legalValue = float()
         if nextAgent == 0:
@@ -150,6 +162,13 @@ class MinimaxAgent(MultiAgentSearchAgent):
             legalValue = self.minValue(nextState, nextAgent, curDepth)
         return legalValue
     def maxValue(self, gameState, agentIndex, curDepth):
+        """
+            1. If game is finish return the evaluation of that state
+            2. Get next agent ID
+            3. Create scores list and get all legal action for this agent
+            4. Get all values of every legalAction in next layer by call nextValue and append that value to scores
+            5. Select one of maximun and return value and action
+        """
         if( self.terminalState(gameState, agentIndex, curDepth) ):
             return self.evaluationFunction(gameState), None
         nextAgent = (agentIndex + 1) % gameState.getNumAgents()
@@ -163,6 +182,13 @@ class MinimaxAgent(MultiAgentSearchAgent):
         chosenIndex = random.choice(bestIndices)
         return bestScore, legalMoves[chosenIndex]
     def minValue(self, gameState, agentIndex, curDepth):
+        """
+            1. If game is finish return the evaluation of that state
+            2. Get next agent ID
+            3. Create a float variable to load min value
+            4. Get all values of every legalAction in next layer by call nextValue and select min one
+            5. Return min value
+        """
         if( self.terminalState(gameState, agentIndex, curDepth) ):
             return self.evaluationFunction(gameState)
         nextAgent = (agentIndex + 1) % gameState.getNumAgents()
@@ -183,13 +209,24 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         """
         # Begin your code (Part 2)
         #raise NotImplementedError("To be implemented")
+        """
+            1. Almost same with part 1
+            2. We need give two value to function: alpha (load maximun), beta (load minimun)
+        """
         _, nextAction = self.maxValue(gameState, 0, 0, float("-inf"), float("inf"));
         return nextAction
     def terminalState(self, gameState, agentIndex, curDepth):
+        """
+            1. Same with part 1
+        """
         if gameState.isWin() or gameState.isLose() or curDepth >= self.depth:
             return True
         return False
     def nextValue(self, gameState, agentIndex, curDepth, nextAgent, legalAction, alpha, beta):
+        """
+            1. Almost same with part 1
+            2. Let alpha and beta can be got by next layer
+        """
         nextState = gameState.getNextState(agentIndex, legalAction)
         legalValue = float()
         if nextAgent == 0:
@@ -198,6 +235,11 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
             legalValue = self.minValue(nextState, nextAgent, curDepth, alpha, beta)
         return legalValue
     def maxValue(self, gameState, agentIndex, curDepth, alpha, beta):
+        """
+            1. Almost same with part 1
+            2. When legalValue is greater than beta then return that value and action
+            3. Load max value for alpha for every legalAction
+        """
         if( self.terminalState(gameState, agentIndex, curDepth) ):
             return self.evaluationFunction(gameState), None
         nextAgent = (agentIndex + 1) % gameState.getNumAgents()
@@ -214,6 +256,11 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         chosenIndex = random.choice(bestIndices)
         return bestScore, legalMoves[chosenIndex]
     def minValue(self, gameState, agentIndex, curDepth, alpha, beta):
+        """
+            1. Almost same with part 1
+            2. When legalValue is fewer than alpha then return that value and action
+            3. Load min value for beta for every legalAction
+        """
         if( self.terminalState(gameState, agentIndex, curDepth) ):
             return self.evaluationFunction(gameState)
         nextAgent = (agentIndex + 1) % gameState.getNumAgents()
@@ -242,13 +289,22 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         """
         # Begin your code (Part 3)
         #raise NotImplementedError("To be implemented")
+        """
+            1. Same with part 1
+        """
         _, nextAction = self.maxValue(gameState, 0, 0);
         return nextAction
     def terminalState(self, gameState, agentIndex, curDepth):
+        """
+            1. Same with part 1
+        """
         if gameState.isWin() or gameState.isLose() or curDepth >= self.depth:
             return True
         return False
     def nextValue(self, gameState, agentIndex, curDepth, nextAgent, legalAction):
+        """
+            1. Same with part 1
+        """
         nextState = gameState.getNextState(agentIndex, legalAction)
         legalValue = float()
         if nextAgent == 0:
@@ -257,6 +313,9 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
             legalValue = self.minValue(nextState, nextAgent, curDepth)
         return legalValue
     def maxValue(self, gameState, agentIndex, curDepth):
+        """
+            1. Same with part 1
+        """
         if( self.terminalState(gameState, agentIndex, curDepth) ):
             return self.evaluationFunction(gameState), None
         nextAgent = (agentIndex + 1) % gameState.getNumAgents()
@@ -270,6 +329,11 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         chosenIndex = random.choice(bestIndices)
         return bestScore, legalMoves[chosenIndex]
     def minValue(self, gameState, agentIndex, curDepth):
+        """
+            1. Almost same with part 1
+            2. Create scores list to load values with every action
+            3. Return sum of values divide by number of values
+        """
         if( self.terminalState(gameState, agentIndex, curDepth) ):
             return self.evaluationFunction(gameState)
         nextAgent = (agentIndex + 1) % gameState.getNumAgents()
@@ -289,59 +353,41 @@ def betterEvaluationFunction(currentGameState):
     """
     # Begin your code (Part 4)
     #raise NotImplementedError("To be implemented")
+    """
+        1. Get some information of this state by the function of this game
+    """
     pacemanDir = currentGameState.getPacmanState().getDirection()
     pacmanPos = currentGameState.getPacmanPosition()
     ghostsState = [(manhattanDistance(pacmanPos, currentGameState.getGhostPosition(Id)), Id) for Id in range(1, currentGameState.getNumAgents())]
     minGhostDist, minGhostId = (0, 0) if len(ghostsState) == 0 else min(ghostsState)
     ghostsDist = [x for x, y in ghostsState]
     avgGhostDist = 0 if len(ghostsDist) == 0 else sum (ghostsDist) / len(ghostsDist)
-    isEat = currentGameState.data.agentStates[0].scaredTimer > 1
+    isEat = currentGameState.data.agentStates[minGhostId].scaredTimer > 1
     curScore = currentGameState.getScore()
     foodDist = [manhattanDistance(pacmanPos, food) for food in currentGameState.getFood().asList()]
     numFood = currentGameState.getNumFood()
     minFoodDist = 1 if numFood == 0 else min(foodDist)
     avgFoodDist = 1 if numFood == 0 else sum(foodDist) / len(foodDist)
+    numCapsules = len(currentGameState.getCapsules())
     capsulesDist = [manhattanDistance(pacmanPos, capsule) for capsule in currentGameState.getCapsules()]
     minCapsuleDist = 1 if len(currentGameState.getCapsules()) == 0 else min( capsulesDist )
     wall = currentGameState.hasWall(0,0)
-    numAgent = currentGameState.getNumAgents() > 2
+    numAgent = currentGameState.getNumAgents() > 1
+    """
+        2. Return evaluation by some rules with some information
+            - If pacman can eat nearest ghost, then return 10 * curScore + (-30 * minGhostDist)
+                - Let pacman go to eat ghost
+            - Else if pacman is very close with ghosts then return 10 * curScore + (10 * minGhostDist)
+                - Keep pacman away from ghosts
+            - Else return 10 * curScore + (-1 * minFoodDist) + (-20 * minCapsuleDist) + (-5 * numFood) + (-100 * numCapsules)
+                - Let pacman got eat capsule and food
     """
     if isEat:
-        return -60 * minGhostDist + curScore
-    elif minCapsuleDist < 2 and minGhostDist < 3:
-        return 300
-    elif minGhostDist < 1:
-        return curScore - 500
-    else:
-        return -1 * ( 1 / ( numFood + 1 ) ) * ( minFoodDist +  0.6 * avgFoodDist)  + curScore
-    """
-    """
-    if isEat:
-        return -50 * minGhostDist + 100 * curScore
-    elif minGhostDist < 2:
-        return 0.8 * curScore + avgGhostDist * numAgent
-    elif len(currentGameState.getCapsules()) > 0:
-        return 1 / minCapsuleDist
-    else:
-        return 0.5 * (1 / minFoodDist) + 1 / minCapsuleDist + curScore
-    """
-    #return isEat * -50 * minGhostDist + 100 * curScore + 0.8 * curScore + avgGhostDist * numAgent + 0.5 * (1 / minFoodDist) + 1 / minCapsuleDist + curScore
-    """
-    if isEat:
-        return 1 / minGhostDist
-    elif minGhostDist < 2:
-        return 1/ (minGhostDist+1)
-    elif len(capsulesDist) > 0:
-        return 1 / capsulesDist[len(capsulesDist) - 1]
-    else:
-        return 1 / minFoodDist
-    """
-    if isEat:
-        return -30 * minGhostDist + curScore
+        return 10 * curScore + (-30 * minGhostDist)
     elif minGhostDist < 3:
-        return curScore + avgGhostDist * numAgent
+        return 10 * curScore + (10 * minGhostDist)
     else:
-        return -1 * minFoodDist + -20 * minCapsuleDist + curScore
+        return 10 * curScore + (-1 * minFoodDist) + (-20 * minCapsuleDist) + (-5 * numFood) + (-100 * numCapsules)
     # End your code (Part 4)
 
 # Abbreviation
