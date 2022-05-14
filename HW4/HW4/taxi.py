@@ -39,7 +39,11 @@ class Agent():
             action: The action to be evaluated.
         """
         # Begin your code
-        pass
+        #pass
+        if random.uniform(0,1) < self.epsilon:
+            return self.env.action_space.sample()
+        else:
+            return np.argmax(self.qtable[state])
         # End your code
 
     def learn(self, state, action, reward, next_state, done):
@@ -57,11 +61,16 @@ class Agent():
             None (Don't need to return anything)
         """
         # Begin your code
-        pass
+        #pass
+        oldValue = self.qtable[state, action]
+        nextMax = np.max(self.qtable[next_state]) if not done else 0
+        newValue = (1 - self.learning_rate) * oldValue + self.learning_rate * (reward + self.gamma * nextMax)
+        self.qtable[state, action] = newValue
         # End your code
-
+        
         # You can add some conditions to decide when to save your table
-        np.save("./Tables/taxi_table.npy", self.qtable)
+        if done and len(total_reward) == 2:
+            np.save("./Tables/taxi_table.npy", self.qtable)
 
     def check_max_Q(self, state):
         """
@@ -74,7 +83,8 @@ class Agent():
             max_q: the max Q value of given state
         """
         # Begin your code
-        pass
+        #pass
+        return np.max(self.qtable[state])
         # End your code
 
 
@@ -178,7 +188,7 @@ if __name__ == "__main__":
     The main funtion
     '''
     # Please change to the assigned seed number in the Google sheet
-    SEED = 20
+    SEED = 125#20
 
     env = gym.make("Taxi-v3")
     seed(SEED)

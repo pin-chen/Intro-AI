@@ -22,7 +22,7 @@ def taxi():
              label='taxi', color='gray')
     plt.legend(loc="best")
     plt.savefig("./Graphs/taxi.png")
-    plt.show()
+    #plt.show()
     plt.close()
 
 
@@ -37,7 +37,7 @@ def cartpole():
                      Q_learning_avg+Q_learning_std, Q_learning_avg-Q_learning_std, facecolor='lightblue')
     plt.legend(loc="best")
     plt.savefig("./Graphs/cartpole.png")
-    plt.show()
+    #plt.show()
     plt.close()
 
 
@@ -54,7 +54,7 @@ def DQN():
                      DQN_avg+DQN_std, DQN_avg-DQN_std, facecolor='lightblue')
     plt.legend(loc="best")
     plt.savefig("./Graphs/DQN.png")
-    plt.show()
+    #plt.show()
     plt.close()
 
 
@@ -69,7 +69,7 @@ def compare():
              Q_learning_avg[:1000], label='Q_learning', color='orange')
     plt.legend(loc="best")
     plt.savefig("./Graphs/compare.png")
-    plt.show()
+    #plt.show()
     plt.close()
 
 

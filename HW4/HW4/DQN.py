@@ -140,11 +140,29 @@ class Agent():
             self.target_net.load_state_dict(self.evaluate_net.state_dict())
 
         # Begin your code
-        pass
+        #pass
+        observations, actions, rewards, next_observations, done = self.buffer.sample(self.batch_size)
+        
+        observations = torch.FloatTensor(np.array(observations))
+        actions = torch.LongTensor(actions)
+        rewards = torch.FloatTensor(rewards)
+        next_observations = torch.FloatTensor(np.array(next_observations))
+        done = torch.BoolTensor(done)
+        
+        evaluate = self.evaluate_net(observations).gather(1, actions.reshape(self.batch_size, 1))
+        nextMax = self.target_net(next_observations).detach()
+        target = rewards.reshape(self.batch_size, 1) + self.gamma * nextMax.max(1)[0].view(self.batch_size, 1) * (~done).reshape(self.batch_size, 1)
+        
+        MSE = nn.MSELoss()
+        loss = MSE(evaluate, target)
+        self.optimizer.zero_grad()
+        loss.backward()
+        self.optimizer.step()
         # End your code
 
         # You can add some conditions to decide when to save your neural network model
-        torch.save(self.target_net.state_dict(), "./Tables/DQN.pt")
+        if len(total_rewards) == 4: 
+            torch.save(self.target_net.state_dict(), "./Tables/DQN.pt")
 
     def choose_action(self, state):
         """
@@ -162,7 +180,11 @@ class Agent():
         """
         with torch.no_grad():
             # Begin your code
-            pass
+            #pass
+            if random.uniform(0,1) < self.epsilon:
+                action = self.env.action_space.sample()
+            else:
+                action = torch.argmax(self.evaluate_net.forward(torch.FloatTensor(state))).item()
             # End your code
         return action
 
@@ -180,7 +202,8 @@ class Agent():
             max_q: the max Q value of initial state(self.env.reset())
         """
         # Begin your code
-        pass
+        #pass
+        return torch.max(self.target_net(torch.FloatTensor(self.env.reset())))
         # End your code
 
 
@@ -262,7 +285,7 @@ if __name__ == "__main__":
     The main funtion
     '''
     # Please change to the assigned seed number in the Google sheet
-    SEED = 20
+    SEED = 125
 
     env = gym.make('CartPole-v0')
     seed(SEED)

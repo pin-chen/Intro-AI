@@ -1,6 +1,7 @@
 import numpy as np
 import gym
 import os
+import random
 from tqdm import tqdm
 
 total_reward = []
@@ -58,7 +59,8 @@ class Agent():
             1. This can be done with a numpy function.
         """
         # Begin your code
-        pass
+        #pass
+        return np.linspace(lower_bound, upper_bound, num_bins, endpoint=False)[1:]
         # End your code
 
     def discretize_value(self, value, bins):
@@ -80,7 +82,8 @@ class Agent():
             1. This can be done with a numpy function.				
         """
         # Begin your code
-        pass
+        #pass
+        return np.digitize(value, bins)
         # End your code
 
     def discretize_observation(self, observation):
@@ -103,7 +106,11 @@ class Agent():
             3. You might find something useful in Agent.__init__()
         """
         # Begin your code
-        pass
+        #pass
+        state = list()
+        for index in range(4):
+            state.append( self.discretize_value(observation[index], self.bins[index]) )
+        return state
         # End your code
 
     def choose_action(self, state):
@@ -118,7 +125,11 @@ class Agent():
             action: The action to be evaluated.
         """
         # Begin your code
-        pass
+        #pass
+        if random.uniform(0,1) < self.epsilon:
+            return self.env.action_space.sample()
+        else:
+            return np.argmax(self.qtable[tuple(state)])
         # End your code
 
     def learn(self, state, action, reward, next_state, done):
@@ -136,11 +147,16 @@ class Agent():
             None (Don't need to return anything)
         """
         # Begin your code
-        pass
+        #pass
+        oldValue = self.qtable[tuple(state)][action]
+        nextMax = np.max(self.qtable[tuple(next_state)]) if not done else 0 
+        newValue = (1 - self.learning_rate) * oldValue + self.learning_rate * (reward + self.gamma * nextMax)
+        self.qtable[tuple(state)][action] = newValue
         # End your code
 
         # You can add some conditions to decide when to save your table
-        np.save("./Tables/cartpole_table.npy", self.qtable)
+        if done and len(total_reward) == 3:
+            np.save("./Tables/cartpole_table.npy", self.qtable)
 
     def check_max_Q(self):
         """
@@ -156,7 +172,9 @@ class Agent():
             max_q: the max Q value of initial state(self.env.reset())
         """
         # Begin your code
-        pass
+        #pass
+        state = self.discretize_observation(self.env.reset())
+        return np.max(self.qtable[tuple(state)])
         # End your code
 
 
@@ -242,15 +260,15 @@ def seed(seed=20):
     '''
     os.environ['PYTHONHASHSEED'] = str(seed)
     np.random.seed(seed)
-
+    random.seed(seed)
 
 if __name__ == "__main__":
     '''
     The main funtion
     '''
     # Please change to the assigned seed number in the Google sheet
-    SEED = 20
-
+    SEED = 125
+    
     env = gym.make('CartPole-v0')
     seed(SEED)
     env.seed(SEED)
