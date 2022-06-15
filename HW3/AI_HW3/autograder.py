@@ -68,6 +68,8 @@ def readCommand(argv):
                       action='store_true',
                       help='No graphics display for pacman games.')
     (options, args) = parser.parse_args(argv)
+    print(options)
+    print(args)
     return options
 
 
